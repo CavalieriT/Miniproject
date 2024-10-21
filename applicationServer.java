@@ -15,7 +15,7 @@ public class applicationServer {
     public boolean sendtoMusicSubteam(String applicationID){
         Application application = applications.get(String.valueOf(applicationID));
         if(application != null){
-            String taskID = String.valueOf(applicationID);
+            String taskID = "TASK" + String.valueOf(applicationID);
             musicSubteamTasks.put(taskID, application);
             applications.remove(String.valueOf(applicationID));
             return true;
