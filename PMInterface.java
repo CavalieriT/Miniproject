@@ -15,7 +15,8 @@ public class PMInterface {
             System.out.println("2. Write HR request");
             System.out.println("3. Check HR requests");
             System.out.println("4. Fill application");
-            System.out.println("5. Exit");
+            System.out.println("5. Check comments");
+            System.out.println("6. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -33,6 +34,9 @@ public class PMInterface {
                     acceptHRRequest();
                     break;
                 case 5:
+                    checkComments();
+                    break;
+                case 6:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -60,8 +64,8 @@ public class PMInterface {
         }
         
     }
-    private static void sendApplication(){
-        boolean success = applicationService.sendtoMusicSubteam(application app);
+    private static void sendApplication(String appID){
+        boolean success = applicationService.sendtoMusicSubteam(appID);
         if (success) {
             System.out.println("Application sent successfully");
         } else {
@@ -77,7 +81,7 @@ public class PMInterface {
         String subteam = scanner.nextLine();
 
         applicationService.createApplication(applicationID, applicationText, subteam);
-        sendApplication();
+        sendApplication(String.valueOf(applicationID));
     }
 
     private static void sendHRRequest(){
@@ -108,4 +112,16 @@ public class PMInterface {
         System.out.println("HR request created successfully");
         sendHRRequest();
     }
+
+    private static void checkComments(){
+        Hashmap<String, String> comment_to_check = applicationService.getComments_out();
+        if(comment_to_check.isEmpty()){
+            System.out.println("No comments found");
+        }else {
+            for(String comment : comment_to_check.values()){
+                System.out.println("Comment: " + comment);
+            }
+        }
+    }
 }
+
