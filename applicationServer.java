@@ -24,6 +24,11 @@ public class applicationServer {
         return false;
     }
 
+    public HashMap<String, Application> getApplicatio(){
+        return applications;
+    }
 
-
+    public HashMap<String, Task> getMusicSubteamTasks(){
+        return musicSubTeamTasks;
+    }
 }
