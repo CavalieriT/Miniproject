@@ -13,8 +13,9 @@ public class PMInterface {
             System.out.println("\nWelcome, Production Manager");
             System.out.println("1. Check availability");
             System.out.println("2. Write HR request");
-            System.out.println("3. Fill application");
-            System.out.println("4. Exit");
+            System.out.println("3. Check HR requests");
+            System.out.println("4. Fill application");
+            System.out.println("5. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -29,6 +30,9 @@ public class PMInterface {
                     fillApplication();
                     break;
                 case 4:
+                    acceptHRRequest();
+                    break;
+                case 5:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -38,7 +42,24 @@ public class PMInterface {
         }
     
     }
-
+    
+    private static void checkHRRequests(){
+        Map<String, HRRequest> hrRequests = HRRequestService.getHRRequests_accepted();
+        if(hrRequests.isEmpty()){
+            System.out.println("No HR requests found");
+        } else {
+            for(HRRequest hrRequest : hrRequests.values()){
+                System.out.println("HR Request ID: " + hrRequest.getHrRequestID());
+                System.out.println("Contract Type: " + hrRequest.getContractType());
+                System.out.println("Department: " + hrRequest.getDepartment());
+                System.out.println("Year of Experience: " + hrRequest.getYearOfExperience());
+                System.out.println("Job Title: " + hrRequest.getJobTitle());
+                System.out.println("Job Description: " + hrRequest.getJobDescription());
+            }
+            System.out.println("Request accepted successfully");
+        }
+        
+    }
     private static void sendApplication(){
         boolean success = applicationService.sendtoMusicSubteam(application app);
         if (success) {
@@ -57,5 +78,34 @@ public class PMInterface {
 
         applicationService.createApplication(applicationID, applicationText, subteam);
         sendApplication();
+    }
+
+    private static void sendHRRequest(){
+        boolean success = HRRequestService.sendtoHR(String.valueOf(hrRequestID));
+        if (success) {
+            System.out.println("Request sent successfully");
+        } else {
+            System.out.println("Failed to send request");
+        }
+    }
+
+    private static void writeHRRequest(){
+        System.out.println("Write HR request: ");
+        System.out.println("Enter the HR request ID: ");
+        int hrRequestID = Integer.parseInt(scanner.nextLine());
+        System.out.println("Enter the contract type: ");
+        String contractType = scanner.nextLine();
+        System.out.println("Enter the requestind department: ");
+        Department department = Department.valueOf(scanner.nextLine().toUpperCase());
+        System.out.println("Enter the Year of experience: ");
+        String yearOfExperience = scanner.nextLine();
+        System.out.println("Job title: ");
+        String jobTitle = scanner.nextLine();
+        System.out.println("Enter the job description: ");
+        String jobDescription = scanner.nextLine();
+
+        HRRequestService.createHRRequest(hrRequestID, contractType, department, yearOfExperience, jobTitle, jobDescription);
+        System.out.println("HR request created successfully");
+        sendHRRequest();
     }
 }
