@@ -22,7 +22,16 @@ public class BudgetRequestService {
             budgetRequests_in.remove(requestID, request);
             return true;
         }
+        return false;
     }
+
+    public BudgetRequest createBudgetRequest(Department department, String projectID, double requiredAmount, String reason){
+        BudgetRequest budgetrequest = new BudgetRequest(department, projectID, requiredAmount, reason);
+        budgetRequests_in.put(projectID, budgetrequest);
+        return budgetrequest;
+    }
+
+
 
     public HashMap<String, BudgetRequest> getBudgetRequests_in(){
         return budgetRequests_in;
