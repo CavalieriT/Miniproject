@@ -8,8 +8,8 @@ public class applicationServer {
     private HashMap<String, String> comments_in = new HashMap<>();
     private HashMap<String, String> comments_out = new HashMap<>();
 
-    public Application createApplication(int applicationID, String applicationText, String subteam){
-        Application newApplication = new Application(applicationID, applicationText, subteam);
+    public Application createApplication(int applicationID, String applicationText, String subteam, ApplicationStatus status){
+        Application newApplication = new Application(applicationID, applicationText, subteam, status);
         applications.put(String.valueOf(applicationID), newApplication);
         return newApplication;
     }
@@ -35,6 +35,15 @@ public class applicationServer {
         comments_out.put(taskID, comment);
         comments_in.remove(taskID);
         return true;
+    }
+
+    public boolean setApplicationStatus(String applicationID, ApplicationStatus status){
+        Application application = applications.get(String.valueOf(applicationID));
+        if(application != null){
+            application.setStatus(status);
+            return true;
+        }
+        return false;
     }
 
     public HashMap<String, Application> getApplications(){
