@@ -1,6 +1,7 @@
 package miniproject;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Map;
 import java.sql.Date;
 
 public class PMInterface {
@@ -16,7 +17,8 @@ public class PMInterface {
             System.out.println("3. Check HR requests");
             System.out.println("4. Fill application");
             System.out.println("5. Check comments");
-            System.out.println("6. Exit");
+            System.out.println("6. Set application status to OPEN");
+            System.out.println("7. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -37,6 +39,9 @@ public class PMInterface {
                     checkComments();
                     break;
                 case 6:
+                    setApplicationStatusOPEN();
+                    break;
+                case 7:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -122,6 +127,13 @@ public class PMInterface {
                 System.out.println("Comment: " + comment);
             }
         }
+    }
+
+        private static void setApplicationStatusOPEN(){
+        System.out.println("Enter the application ID: ");
+        int applicationID = Integer.parseInt(scanner.nextLine());
+        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.OPEN);
+        System.out.println("Application status set to OPEN");
     }
 }
 
