@@ -18,7 +18,9 @@ public class PMInterface2 {
             System.out.println("5. Check comments");
             System.out.println("6. Write budget request");
             System.out.println("7. Check budget requests");
-            System.out.println("8. Exit");
+            System.out.println("8. Set application status to OPEN");
+            System.out.println("9. Set application status to IN_PROGRESS");
+            System.out.println("10. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -44,7 +46,13 @@ public class PMInterface2 {
                 case 7:
                     checkBudgetRequests();
                     break;
-                case 8:
+                case 8: 
+                    setApplicationStatusOPEN();
+                    break;
+                case 9:
+                    setApplicationStatusIN_PROGRESS();
+                    break;
+                case 10:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -88,7 +96,7 @@ public class PMInterface2 {
         System.out.println("Choose the subteam:");
         String subteam = scanner.nextLine();
 
-        applicationService.createApplication(applicationID, applicationText, subteam);
+        applicationService.createApplication(applicationID, applicationText, subteam, ApplicationStatus.DEFAULT);
         sendApplication(String.valueOf(applicationID));
     }
 
@@ -159,5 +167,19 @@ public class PMInterface2 {
                 System.out.println("Reason: " + budgetRequest.getReason()); 
             }
         }
+    }
+
+    private static void setApplicationStatusOPEN(){
+        System.out.println("Enter the application ID: ");
+        int applicationID = Integer.parseInt(scanner.nextLine());
+        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.OPEN);
+        System.out.println("Application status set to OPEN");
+    }
+
+    private static void setApplicationStatusIN_PROGRESS(){
+        System.out.println("Enter the application ID: ");
+        int applicationID = Integer.parseInt(scanner.nextLine());
+        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.IN_PROGRESS);
+        System.out.println("Application status set to IN_PROGRESS");
     }
 }
