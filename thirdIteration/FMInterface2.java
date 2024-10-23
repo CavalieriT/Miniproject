@@ -14,7 +14,10 @@ public class FMInterface2 {
             System.out.println("1. View requests");
             System.out.println("2. Provide feedback for a request");
             System.out.println("3. Redirect request to administration manager");
-            System.out.println("4. Exit");
+            System.out.println("4. View budget requests");
+            System.out.println("5. Accept budget request");
+            System.out.println("6. Reject budget request");
+            System.out.println("7. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -92,7 +95,8 @@ public class FMInterface2 {
     }
 
     private static void ViewFinancialRequest(){
-        Map<String,BudgetRequest> FMrequests = BudgetRequestService.getBudgetRequests_in();
+        BudgetRequestService budgetRequestService = new BudgetRequestService();
+        HashMap<String,BudgetRequest> FMrequests = budgetRequestService.getBudgetRequests_in();
         if(FMrequests.isEmpty()) System.out.println("No new requests.");
         else{
             System.out.println("Requests for Financial Manager: ");
@@ -108,7 +112,7 @@ public class FMInterface2 {
     private static void AcceptFinancialRequest(){
         System.out.print("Enter Request ID to accept: ");
         String requestID = scanner.nextLine();
-        boolean success = BudgetRequestService.acceptBudgetRequest(requestID);
+        boolean success = budgetRequestService.acceptBudgetRequest(requestID);
         if (success) {
             System.out.println("Request " + requestID + " has been accepted.");
         } else {
@@ -119,7 +123,7 @@ public class FMInterface2 {
     private static void RejectFinancialRequest(){
         System.out.print("Enter Request ID to reject: ");
         String requestID = scanner.nextLine();
-        boolean success = BudgetRequestService.rejectBudgetRequest(requestID);
+        boolean success = budgetRequestService.rejectBudgetRequest(requestID);
         if (success) {
             System.out.println("Request " + requestID + " has been rejected.");
         } else {
