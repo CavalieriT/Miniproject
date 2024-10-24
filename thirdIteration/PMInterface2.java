@@ -1,6 +1,7 @@
 package miniproject;
 import java.util.Scanner;
 import java.util.HashMap;
+import java.util.Map;
 import java.sql.Date;
 
 public class PMInterface2 {
@@ -10,17 +11,15 @@ public class PMInterface2 {
         boolen exitCondition = true;
 
         while (exitCondition) {
-            System.out.println("\nWelcome, Production Manager");
+            System.out.println("\nWelcome, Service Manager");
             System.out.println("1. Check availability");
             System.out.println("2. Write HR request");
             System.out.println("3. Check HR requests");
-            System.out.println("4. Fill application");
+            System.out.println("4. Send task");
             System.out.println("5. Check comments");
             System.out.println("6. Write budget request");
             System.out.println("7. Check budget requests");
-            System.out.println("8. Set application status to OPEN");
-            System.out.println("9. Set application status to IN_PROGRESS");
-            System.out.println("10. Exit");
+            System.out.println("8. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -32,27 +31,21 @@ public class PMInterface2 {
                     writeHRRequest();
                     break;
                 case 3:
-                    fillApplication();
+                    checkHRRequests();
                     break;
                 case 4:
-                    acceptHRRequest();
+                    sendTask();
                     break;
                 case 5:
                     checkComments();
                     break;
-                case 6: 
-                    writeBudgetRequest();
+                case 6:
+                    WriteBudegtRequest();
                     break;
                 case 7:
                     checkBudgetRequests();
                     break;
-                case 8: 
-                    setApplicationStatusOPEN();
-                    break;
-                case 9:
-                    setApplicationStatusIN_PROGRESS();
-                    break;
-                case 10:
+                case 8:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -62,42 +55,44 @@ public class PMInterface2 {
         }
     
     }
-    
+
+    private static boolean checkAvailability(){     
+        return true;
+    }
+
     private static void checkHRRequests(){
         Map<String, HRRequest> hrRequests = HRRequestService.getHRRequests_accepted();
         if(hrRequests.isEmpty()){
             System.out.println("No HR requests found");
         } else {
             for(HRRequest hrRequest : hrRequests.values()){
-                System.out.println("HR Request ID: " + hrRequest.getHrRequestID());
-                System.out.println("Contract Type: " + hrRequest.getContractType());
-                System.out.println("Department: " + hrRequest.getDepartment());
-                System.out.println("Year of Experience: " + hrRequest.getYearOfExperience());
-                System.out.println("Job Title: " + hrRequest.getJobTitle());
-                System.out.println("Job Description: " + hrRequest.getJobDescription());
+                if(hrRequest.getDepartment() == Department.SERVICES){
+                    System.out.println("HR Request ID: " + hrRequest.getHrRequestID());
+                    System.out.println("Contract Type: " + hrRequest.getContractType());
+                    System.out.println("Department: " + hrRequest.getDepartment());
+                    System.out.println("Year of Experience: " + hrRequest.getYearOfExperience());
+                    System.out.println("Job Title: " + hrRequest.getJobTitle());
+                    System.out.println("Job Description: " + hrRequest.getJobDescription());
+                }
             }
             System.out.println("Request accepted successfully");
         }
         
     }
-    private static void sendApplication(String appID){
-        boolean success = applicationService.sendtoMusicSubteam(appID);
-        if (success) {
-            System.out.println("Application sent successfully");
-        } else {
-            System.out.println("Failed to send application");
-        }
-    }
-    private static void fillApplication(){
-        System.out.println("Enter the application ID: ");
-        int applicationID = Integer.parseINT(scanner.nextLine());
-        System.out.println("Fill the application: ");
-        String applicationText = scanner.nextLine();
-        System.out.println("Choose the subteam:");
-        String subteam = scanner.nextLine();
 
-        applicationService.createApplication(applicationID, applicationText, subteam, ApplicationStatus.DEFAULT);
-        sendApplication(String.valueOf(applicationID));
+    private static void sendTask(){
+        String manager = "Service Manager";
+        System.out.println("Create the task to send");
+        System.out.println("Enter the task ID: ");
+        int TaskID = Integer.parseINT(scanner.nextLine());
+        System.out.println("Fill the task description: ");
+        String Taskdescription = scanner.nextLine();
+        System.out.println("Choose the worker:");
+        String worker = scanner.nextLine();
+        System.out.println("Choose the priority: ");
+        Priority priority = Priority.valueOf(scanner.nextLine().toUpperCase());
+
+        TaskService.createTask(TaskID, Taskdescription, worker, priority, manager);
     }
 
     private static void sendHRRequest(){
@@ -124,13 +119,15 @@ public class PMInterface2 {
         System.out.println("Enter the job description: ");
         String jobDescription = scanner.nextLine();
 
-        HRRequestService.createHRRequest(hrRequestID, contractType, department, yearOfExperience, jobTitle, jobDescription);
+        HRRequestService hrRequestService = new HRRequestService();
+        hrRequestService.createHRRequest(hrRequestID, contractType, department, yearOfExperience, jobTitle, jobDescription);
         System.out.println("HR request created successfully");
         sendHRRequest();
     }
 
     private static void checkComments(){
-        Hashmap<String, String> comment_to_check = applicationService.getComments_out();
+        TaskServer taskServer = new TaskServer();
+        Hashmap<String, String> comment_to_check = taskServer.getComments_out();
         if(comment_to_check.isEmpty()){
             System.out.println("No comments found");
         }else {
@@ -150,36 +147,25 @@ public class PMInterface2 {
         System.out.println("Enter Reason: ");
         String reason = scanner.nextLine();
 
-        BudgetRequestService.createBudgetRequest(department, projectID, requiredAmount, reason);
+        BudgetRequestService budgetRequestService = new BudgetRequestService();
+        budgetRequestService.createBudgetRequest(department, projectID, requiredAmount, reason);
         System.out.println("Budget request created successfully");
     }
 
     private static void checkBudgetRequests(){
         BudgetRequestService budgetRequestService = new BudgetRequestService();
-        HashMap<String, BudgetRequest> budgetRequests = budgetRequestService.getBudgetRequests_in();
+        HashMap<String, BudgetRequest> budgetRequests = budgetRequestService.getBudgetRequests_out();
         if(budgetRequests.isEmpty()){
             System.out.println("No budget requests found");
         } else {
             for(BudgetRequest budgetRequest : budgetRequests.values()){
-                System.out.println("Budget Request ID: " + budgetRequest.getProjectID());
-                System.out.println("Department: " + budgetRequest.getDepartment());
-                System.out.println("Required Amount: " + budgetRequest.getRequiredAmount());
-                System.out.println("Reason: " + budgetRequest.getReason()); 
+                if(budgetRequest.getDepartment() == Department.PRODUCTION){
+                    System.out.println("Budget Request ID: " + budgetRequest.getProjectID());
+                    System.out.println("Department: " + budgetRequest.getDepartment());
+                    System.out.println("Required Amount: " + budgetRequest.getRequiredAmount());
+                    System.out.println("Reason: " + budgetRequest.getReason()); 
+                }
             }
         }
-    }
-
-    private static void setApplicationStatusOPEN(){
-        System.out.println("Enter the application ID: ");
-        int applicationID = Integer.parseInt(scanner.nextLine());
-        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.OPEN);
-        System.out.println("Application status set to OPEN");
-    }
-
-    private static void setApplicationStatusIN_PROGRESS(){
-        System.out.println("Enter the application ID: ");
-        int applicationID = Integer.parseInt(scanner.nextLine());
-        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.IN_PROGRESS);
-        System.out.println("Application status set to IN_PROGRESS");
     }
 }
