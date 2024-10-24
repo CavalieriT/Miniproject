@@ -32,14 +32,14 @@ public class HRRequestService {
             return false;
         }
     }
-    public HashMap<String, HRRequest> getHRRequests_in(){
+    public HashMap<String, HRRequest> getHRRequests_pm(){
         return hrRequests_pm;
     }
-    public HashMap<String, HRRequest> getHRRequests_out(){
+    public HashMap<String, HRRequest> getHRRequests_hr(){
         return hrRequests_hr;
     }
     public static HashMap<String, HRRequest> getHRRequests_accepted(){
         return hr_accepted;
     }
-}
+
 
