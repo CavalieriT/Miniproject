@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.sql.Date;
 
-public class SMInterface {
+public class PMInterface {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -15,10 +15,9 @@ public class SMInterface {
             System.out.println("1. Check availability");
             System.out.println("2. Write HR request");
             System.out.println("3. Check HR requests");
-            System.out.println("4. Fill application");
+            System.out.println("4. Send task");
             System.out.println("5. Check comments");
-            System.out.println("6. Set application status to OPEN");
-            System.out.println("7. Exit");
+            System.out.println("6. Exit");
             System.out.println("Enter your choice: ");
             int choice = Integer.parseInt(scanner.nextLine());
 
@@ -30,18 +29,15 @@ public class SMInterface {
                     writeHRRequest();
                     break;
                 case 3:
-                    fillApplication();
+                    checkHRRequests();
                     break;
                 case 4:
-                    acceptHRRequest();
+                    sendTask();
                     break;
                 case 5:
                     checkComments();
                     break;
                 case 6:
-                    setApplicationStatusOPEN();
-                    break;
-                case 7:
                     exitCondition = false;
                     System.out.println("Exiting the system");
                     break;
@@ -51,7 +47,11 @@ public class SMInterface {
         }
     
     }
-    
+
+    private static boolean checkAvailability(){     
+        return true;
+    }
+
     private static void checkHRRequests(){
         Map<String, HRRequest> hrRequests = HRRequestService.getHRRequests_accepted();
         if(hrRequests.isEmpty()){
@@ -69,24 +69,20 @@ public class SMInterface {
         }
         
     }
-    private static void sendApplication(String appID){
-        boolean success = applicationService.sendtoChefSubteam(appID);
-        if (success) {
-            System.out.println("Application sent successfully");
-        } else {
-            System.out.println("Failed to send application");
-        }
-    }
-    private static void fillApplication(){
-        System.out.println("Enter the application ID: ");
-        int applicationID = Integer.parseINT(scanner.nextLine());
-        System.out.println("Fill the application: ");
-        String applicationText = scanner.nextLine();
-        System.out.println("Choose the subteam:");
-        String subteam = scanner.nextLine();
 
-        applicationService.createApplication(applicationID, applicationText, subteam, ApplicationStatus.DEFAULT, Department.SERVICES);
-        sendApplication(String.valueOf(applicationID));
+    private static void sendTask(){
+        String manager = "Service Manager";
+        System.out.println("Create the task to send");
+        System.out.println("Enter the task ID: ");
+        int TaskID = Integer.parseINT(scanner.nextLine());
+        System.out.println("Fill the task description: ");
+        String Taskdescription = scanner.nextLine();
+        System.out.println("Choose the worker:");
+        String worker = scanner.nextLine();
+        System.out.println("Choose the priority: ");
+        Priority priority = Priority.valueOf(scanner.nextLine().toUpperCase());
+
+        TaskService.createTask(TaskID, Taskdescription, worker, priority, manager);
     }
 
     private static void sendHRRequest(){
@@ -127,12 +123,5 @@ public class SMInterface {
                 System.out.println("Comment: " + comment);
             }
         }
-    }
-
-        private static void setApplicationStatusOPEN(){
-        System.out.println("Enter the application ID: ");
-        int applicationID = Integer.parseInt(scanner.nextLine());
-        applicationServer.setApplicationStatus(String.valueOf(applicationID), ApplicationStatus.OPEN);
-        System.out.println("Application status set to OPEN");
     }
 }
