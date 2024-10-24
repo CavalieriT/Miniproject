@@ -58,12 +58,14 @@ public class PMInterface {
             System.out.println("No HR requests found");
         } else {
             for(HRRequest hrRequest : hrRequests.values()){
-                System.out.println("HR Request ID: " + hrRequest.getHrRequestID());
-                System.out.println("Contract Type: " + hrRequest.getContractType());
-                System.out.println("Department: " + hrRequest.getDepartment());
-                System.out.println("Year of Experience: " + hrRequest.getYearOfExperience());
-                System.out.println("Job Title: " + hrRequest.getJobTitle());
-                System.out.println("Job Description: " + hrRequest.getJobDescription());
+                if(hrRequest.getDepartment() == Department.SERVICES){
+                    System.out.println("HR Request ID: " + hrRequest.getHrRequestID());
+                    System.out.println("Contract Type: " + hrRequest.getContractType());
+                    System.out.println("Department: " + hrRequest.getDepartment());
+                    System.out.println("Year of Experience: " + hrRequest.getYearOfExperience());
+                    System.out.println("Job Title: " + hrRequest.getJobTitle());
+                    System.out.println("Job Description: " + hrRequest.getJobDescription());
+                }
             }
             System.out.println("Request accepted successfully");
         }
@@ -109,13 +111,15 @@ public class PMInterface {
         System.out.println("Enter the job description: ");
         String jobDescription = scanner.nextLine();
 
-        HRRequestService.createHRRequest(hrRequestID, contractType, department, yearOfExperience, jobTitle, jobDescription);
+        HRRequestService hrRequestService = new HRRequestService();
+        hrRequestService.createHRRequest(hrRequestID, contractType, department, yearOfExperience, jobTitle, jobDescription);
         System.out.println("HR request created successfully");
         sendHRRequest();
     }
 
     private static void checkComments(){
-        Hashmap<String, String> comment_to_check = applicationService.getComments_out();
+        TaskServer taskServer = new TaskServer();
+        Hashmap<String, String> comment_to_check = taskServer.getComments_out();
         if(comment_to_check.isEmpty()){
             System.out.println("No comments found");
         }else {
