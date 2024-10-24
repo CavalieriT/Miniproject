@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class MusicSubteamInterface {
-    private static applicationServer taskServer = new applicationServer();
+    private static applicationServer applicationServer = new applicationServer();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
