@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class ChefSubteamInterface {
-    private static applicationServer taskServer = new applicationServer();
+    private static applicationServer applicationServer = new applicationServer();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -33,7 +33,7 @@ public class ChefSubteamInterface {
     }
 
     public static void viewTask(){
-        HashMap<String, Task> tasks = applicationServer.getMusicSubteamTasks();
+        HashMap<String, Task> tasks = applicationServer.getChefSubteamTasks();
         if(tasks.isEmpty()){
             System.out.println("No tasks found");
         }
@@ -69,3 +69,4 @@ public class ChefSubteamInterface {
         }
     }
 }
+
