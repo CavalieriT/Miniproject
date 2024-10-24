@@ -5,11 +5,12 @@ import java.util.Date;
 public class applicationServer {
     private HashMap<String, Application> applications = new HashMap<>();
     private HashMap<String, Task> musicSubteamTasks = new HashMap<>();
+    private HashMap<String, Task> chefSubteamTasks = new HashMap<>();
     private HashMap<String, String> comments_in = new HashMap<>();
     private HashMap<String, String> comments_out = new HashMap<>();
 
-    public Application createApplication(int applicationID, String applicationText, String subteam, ApplicationStatus status){
-        Application newApplication = new Application(applicationID, applicationText, subteam, status);
+    public Application createApplication(int applicationID, String applicationText, String subteam, ApplicationStatus status, Department department){
+        Application newApplication = new Application(applicationID, applicationText, subteam, status, department);
         applications.put(String.valueOf(applicationID), newApplication);
         return newApplication;
     }
@@ -19,7 +20,17 @@ public class applicationServer {
         if(application != null){
             String taskID = "TASK" + String.valueOf(applicationID);
             musicSubteamTasks.put(taskID, application);
-            applications.remove(String.valueOf(applicationID));
+            return true;
+        }
+        System.out.println("Application not found");
+        return false;
+    }
+
+    public boolean sendtoCefSubteam(String applicationID){
+        Application application = applications.get(String.valueOf(applicationID));
+        if(application != null){
+            String taskID = "TASK" + String.valueOf(applicationID);
+            chefSubteamTasks.put(taskID, application);
             return true;
         }
         System.out.println("Application not found");
@@ -62,3 +73,4 @@ public class applicationServer {
         return comments_out;
     }
 }
+
