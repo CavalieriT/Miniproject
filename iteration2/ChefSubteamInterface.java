@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class ChefSubteamInterface {
-    private static applicationServer applicationServer = new applicationServer();
+    private static TaskServer taskServer = new TaskServer();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -33,20 +33,21 @@ public class ChefSubteamInterface {
     }
 
     public static void viewTask(){
-        HashMap<String, Task> tasks = applicationServer.getChefSubteamTasks();
+        HashMap<String, Task> tasks = taskServer.getChefSubteamTasks();
         if(tasks.isEmpty()){
             System.out.println("No tasks found");
         }
         else{
             for(Task task : tasks.values()){
                 System.out.println("Task ID: " + task.getTaskID());
-                System.out.println("Task description: " + task.getApplication().getApplicationText());
+                System.out.println("Task description: " + task.getTaskDescription());
+                System.out.println("Priority: " + task.getPriority());
             }
         }
     }
 
     private static void sendComments(String taskID){
-        boolean success = applicationService.sendtoComment(taskID);
+        boolean success = taskServer.sendtoComment(taskID);
         if (success) {
             System.out.println("Comment sent successfully");
         } else {
@@ -59,7 +60,7 @@ public class ChefSubteamInterface {
         System.out.println("Enter the comments: ");
         String comments = scanner.nextLine();
 
-        boolean success = applicationServer.addComments(taskID, comments);
+        boolean success = taskServer.addComments(taskID, comments);
         if(success){
             System.out.println("Comments added successfully");
             sendComments(taskID);
@@ -69,4 +70,3 @@ public class ChefSubteamInterface {
         }
     }
 }
-
