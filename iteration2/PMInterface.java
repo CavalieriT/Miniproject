@@ -85,7 +85,7 @@ public class PMInterface {
         System.out.println("Choose the subteam:");
         String subteam = scanner.nextLine();
 
-        applicationService.createApplication(applicationID, applicationText, subteam);
+        applicationService.createApplication(applicationID, applicationText, subteam, ApplicationStatus.DEFAULT, Department.PRODUCTION);
         sendApplication(String.valueOf(applicationID));
     }
 
